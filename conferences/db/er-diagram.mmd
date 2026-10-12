@@ -1,0 +1,57 @@
+erDiagram
+    users ||--o{ applications : "оставляет"
+    rooms ||--o{ applications : "бронируется в"
+    room_types ||--o{ rooms : "тип"
+    payment_methods ||--o{ applications : "способ оплаты"
+    statuses ||--o{ applications : "статус"
+    applications ||--o| reviews : "отзыв"
+
+    users {
+        serial id PK
+        varchar login UK "латиница и цифры, >= 6"
+        varchar password_hash "scrypt"
+        varchar full_name "кириллица и пробелы"
+        varchar phone "8(XXX)XXX-XX-XX"
+        varchar email
+        varchar role "user | admin"
+        timestamptz created_at
+    }
+    room_types {
+        serial id PK
+        varchar name UK
+    }
+    rooms {
+        serial id PK
+        varchar name UK
+        int room_type_id FK
+        int capacity
+        text description
+    }
+    payment_methods {
+        serial id PK
+        varchar code UK "cash | sbp"
+        varchar name
+    }
+    statuses {
+        serial id PK
+        varchar code UK "new | scheduled | completed"
+        varchar name
+        smallint sort_order
+    }
+    applications {
+        serial id PK
+        int user_id FK
+        int room_id FK
+        int payment_method_id FK
+        int status_id FK
+        date start_date
+        timestamptz created_at
+        timestamptz updated_at
+    }
+    reviews {
+        serial id PK
+        int application_id FK,UK
+        smallint rating "1..5"
+        text comment
+        timestamptz created_at
+    }

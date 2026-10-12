@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2F5BEA">
+  <title>Регистрация — Конференции.РФ</title>
+  <link rel="icon" href="data:image/svg+xml,%0A%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2040%2040%22%20aria-hidden%3D%22true%22%3E%0A%20%20%3Cdefs%3E%3ClinearGradient%20id%3D%22lg%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%221%22%3E%0A%20%20%20%20%3Cstop%20offset%3D%220%22%20stop-color%3D%22%232F5BEA%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%237B4DFF%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%0A%20%20%3Crect%20width%3D%2240%22%20height%3D%2240%22%20rx%3D%2211%22%20fill%3D%22url(%23lg)%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M10%2027V15.5a2%202%200%200%201%202-2h16a2%202%200%200%201%202%202V27%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Cpath%20d%3D%22M8%2027h24%22%20stroke%3D%22%23fff%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22%2F%3E%0A%20%20%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%223.2%22%20fill%3D%22%23FFD166%22%2F%3E%0A%3C%2Fsvg%3E">
+  <style>/* =====================================================================
+   Конференции.РФ — стили. Mobile-first (макет 390×844), адаптив до десктопа.
+   Без внешних шрифтов и CDN: на экзамене нет интернета.
+   ===================================================================== */
+
+:root {
+  --primary: #2f5bea;
+  --primary-600: #2349c9;
+  --primary-50: #eef2ff;
+  --accent: #7b4dff;
+  --sun: #ffd166;
+
+  --bg: #f4f6fb;
+  --surface: #ffffff;
+  --text: #121a33;
+  --muted: #66708a;
+  --border: #e2e6f0;
+
+  --danger: #e5484d;
+  --danger-50: #fff0f0;
+  --success: #18a058;
+  --success-50: #e9f8f0;
+  --warning: #d97706;
+  --warning-50: #fff6e5;
+
+  --radius: 16px;
+  --radius-sm: 12px;
+  --shadow: 0 1px 2px rgba(18, 26, 51, .04), 0 8px 24px rgba(18, 26, 51, .06);
+  --shadow-lg: 0 12px 40px rgba(47, 91, 234, .18);
+  --ease: cubic-bezier(.2, .8, .2, 1);
+  --nav-h: 68px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font: 16px/1.5 var(--font);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body.has-nav { padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); }
+
+a { color: var(--primary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+h1, h2, h3 { margin: 0; line-height: 1.2; letter-spacing: -.01em; }
+h1 { font-size: 26px; font-weight: 800; }
+h3 { font-size: 18px; font-weight: 700; }
+
+.icon { width: 20px; height: 20px; flex: none; }
+.muted { color: var(--muted); }
+
+/* ---------- Шапка ---------- */
+
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  height: 60px; padding: 0 16px;
+  /* без backdrop-filter: иначе fixed-навигация внутри шапки «прилипает» к ней */
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); font-weight: 700; font-size: 17px; }
+.brand:hover { text-decoration: none; }
+.brand b { color: var(--primary); }
+.logo-mark { width: 34px; height: 34px; transition: transform .4s var(--ease); }
+.brand:hover .logo-mark { transform: rotate(-8deg) scale(1.06); }
+
+.topbar-user {
+  display: flex; align-items: center; gap: 6px; min-width: 0;
+  font-size: 14px; color: var(--muted);
+}
+.topbar-user span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
+
+/* ---------- Навигация: нижняя панель на телефоне ---------- */
+
+.nav {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  display: flex; justify-content: space-around;
+  height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding: 6px 8px env(safe-area-inset-bottom);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -6px 24px rgba(18, 26, 51, .06);
+}
+.nav-logout { display: contents; }
+
+.nav-link {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  border: 0; background: none; cursor: pointer; font: inherit;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  border-radius: var(--radius-sm);
+  transition: color .2s, background .2s, transform .15s var(--ease);
+}
+.nav-link:hover { text-decoration: none; color: var(--primary); }
+.nav-link:active { transform: scale(.94); }
+.nav-link.active { color: var(--primary); background: var(--primary-50); }
+.nav-link .icon { width: 22px; height: 22px; }
+
+/* ---------- Контент ---------- */
+
+.page {
+  width: 100%; max-width: 1120px; margin: 0 auto;
+  padding: 20px 16px 32px;
+  animation: page-in .45s var(--ease) both;
+}
+
+.page-head {
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 12px;
+  margin-bottom: 18px;
+}
+.eyebrow {
+  display: flex; align-items: center; gap: 6px;
+  margin: 0 0 4px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--primary);
+}
+.eyebrow .icon { width: 16px; height: 16px; }
+.btn-head { display: none; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+}
+
+.cards { display: grid; gap: 14px; }
+
+/* ---------- Кнопки ---------- */
+
+.btn {
+  position: relative; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 0 20px;
+  border: 1px solid transparent; border-radius: var(--radius-sm);
+  font: inherit; font-weight: 700; cursor: pointer; user-select: none;
+  transition: background .2s, box-shadow .25s var(--ease), transform .15s var(--ease), color .2s;
+}
+.btn:hover { text-decoration: none; }
+.btn:active { transform: scale(.97); }
+.btn:focus-visible { outline: 3px solid rgba(47, 91, 234, .35); outline-offset: 2px; }
+.btn-block { width: 100%; }
+
+.btn-primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  box-shadow: 0 6px 18px rgba(47, 91, 234, .28);
+}
+.btn-primary:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+.btn-soft { color: var(--primary); background: var(--primary-50); }
+.btn-soft:hover { background: #e2e9ff; }
+.btn-ghost { color: var(--muted); background: transparent; border-color: var(--border); }
+.btn-ghost:hover { color: var(--text); background: var(--bg); }
+
+.btn.is-loading { pointer-events: none; color: transparent; }
+.btn.is-loading::after {
+  content: ""; position: absolute; width: 20px; height: 20px;
+  border: 2.5px solid rgba(255, 255, 255, .5); border-top-color: #fff; border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+/* «рябь» по нажатию — создаётся в main.js */
+.ripple {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: rgba(255, 255, 255, .45);
+  transform: scale(0); animation: ripple .6s ease-out forwards;
+}
+.btn-soft .ripple, .btn-ghost .ripple { background: rgba(47, 91, 234, .18); }
+
+/* ---------- Формы ---------- */
+
+.field { margin: 0 0 16px; padding: 0; border: 0; min-width: 0; }
+.field > label, .field > legend, .field .label {
+  display: block; margin-bottom: 6px; padding: 0; font-size: 14px; font-weight: 600;
+}
+
+.input-wrap { position: relative; display: flex; align-items: center; }
+.input-wrap > .icon {
+  position: absolute; left: 14px; color: var(--muted); pointer-events: none;
+  transition: color .2s;
+}
+.input-wrap:focus-within > .icon { color: var(--primary); }
+
+input:not([type="radio"]), select, textarea {
+  width: 100%; min-height: 50px;
+  padding: 12px 14px 12px 44px;
+  font: inherit; color: var(--text);
+  background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  outline: none; appearance: none; -webkit-appearance: none;
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+textarea { padding-left: 14px; resize: vertical; min-height: 90px; }
+input:hover, select:hover, textarea:hover { border-color: #c9d0e2; }
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(47, 91, 234, .12);
+}
+input::placeholder, textarea::placeholder { color: #9aa3b8; }
+input[type="date"] { min-height: 50px; }
+input[type="date"]::-webkit-calendar-picker-indicator { opacity: .6; cursor: pointer; }
+
+.select-wrap::after {
+  content: ""; position: absolute; right: 16px; width: 8px; height: 8px; margin-top: -4px;
+  border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg); pointer-events: none;
+}
+.select-wrap select { padding-right: 40px; cursor: pointer; }
+.select-wrap:not(:has(> .icon)) select { padding-left: 14px; }
+
+.toggle-pass {
+  position: absolute; right: 6px; display: grid; place-items: center;
+  width: 40px; height: 40px; border: 0; border-radius: 10px;
+  background: none; color: var(--muted); cursor: pointer;
+  transition: color .2s, background .2s;
+}
+.toggle-pass:hover { background: var(--bg); color: var(--text); }
+.toggle-pass.on { color: var(--primary); }
+.input-wrap:has(.toggle-pass) input { padding-right: 50px; }
+
+.field-hint { margin: 6px 0 0; font-size: 13px; color: var(--muted); }
+.field-error {
+  margin: 0; max-height: 0; overflow: hidden; opacity: 0;
+  font-size: 13px; font-weight: 600; color: var(--danger);
+  transition: max-height .25s var(--ease), opacity .2s, margin .25s;
+}
+.has-error .field-error { max-height: 60px; opacity: 1; margin-top: 6px; }
+.has-error .field-hint { display: none; }
+.has-error input, .has-error select, .has-error textarea {
+  border-color: var(--danger); background: var(--danger-50);
+}
+.has-error .input-wrap > .icon { color: var(--danger); }
+.field.shake { animation: shake .4s; }
+.field.is-valid input, .field.is-valid select { border-color: var(--success); }
+
+.alert {
+  margin-bottom: 16px; padding: 12px 14px;
+  border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
+  animation: pop .3s var(--ease);
+}
+.alert-error { color: var(--danger); background: var(--danger-50); border: 1px solid #ffd2d3; }
+
+/* ---------- Авторизация / регистрация ---------- */
+
+.auth { max-width: 440px; margin: 0 auto; }
+.auth-hero { text-align: center; margin-bottom: 18px; }
+.auth-hero h1 { margin-top: 6px; }
+.auth-hero p { margin: 6px 0 0; color: var(--muted); }
+.auth-illustration { width: 100%; max-width: 300px; height: auto; }
+.ill-screen { fill: #fff; stroke: var(--border); stroke-width: 2; }
+.ill-line { fill: var(--primary); }
+.ill-line.soft { fill: #d7defa; }
+.ill-chart { fill: var(--sun); }
+.ill-seats rect { fill: #c7d2fe; animation: seat .6s var(--ease) both; }
+.ill-seats rect:nth-child(odd) { fill: #a5b4fc; }
+.auth-card { padding: 20px; }
+.auth-switch { margin: 16px 0 0; text-align: center; font-size: 15px; color: var(--muted); }
+.auth-switch a { font-weight: 700; }
+
+/* ---------- Карточки заявок ---------- */
+
+.app-card {
+  display: grid; gap: 14px;
+  animation: card-in .5s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s;
+}
+.app-card:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(18, 26, 51, .09); }
+
+.app-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.app-card-head h3 { margin: 2px 0 6px; }
+.app-id { font-size: 12px; font-weight: 600; color: var(--muted); }
+
+.chip {
+  display: inline-block; padding: 2px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; color: var(--primary); background: var(--primary-50);
+}
+
+.badge {
+  flex: none; display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; white-space: nowrap; max-width: 150px;
+  white-space: normal; text-align: center; line-height: 1.25;
+}
+.badge::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
+.status-new { color: var(--primary); background: var(--primary-50); }
+.status-new::before { animation: pulse 1.6s infinite; }
+.status-scheduled { color: var(--warning); background: var(--warning-50); }
+.status-completed { color: var(--success); background: var(--success-50); }
+.badge.bump { animation: bump .5s var(--ease); }
+
+.meta { display: grid; gap: 10px; margin: 0; }
+.meta > div {
+  display: grid; grid-template-columns: 20px 1fr; column-gap: 10px; align-items: center;
+}
+.meta .icon { grid-row: span 2; color: var(--primary); width: 18px; height: 18px; }
+.meta dt { font-size: 12px; color: var(--muted); }
+.meta dd { margin: 0; font-weight: 600; font-size: 15px; word-break: break-word; }
+
+/* ---------- Отзывы ---------- */
+
+.review-locked {
+  display: flex; align-items: center; gap: 8px; margin: 0;
+  padding: 10px 12px; border-radius: var(--radius-sm);
+  font-size: 13px; color: var(--muted); background: var(--bg);
+}
+.review-locked .icon { width: 16px; height: 16px; }
+
+.review-done { padding: 12px 14px; border-radius: var(--radius-sm); background: var(--bg); }
+.review-done p { margin: 6px 0 0; font-size: 15px; }
+.review-head { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+
+.stars { color: #d3d8e6; letter-spacing: 1px; font-size: 18px; }
+.stars .on { color: #f5a524; }
+
+.review-form summary { list-style: none; }
+.review-form summary::-webkit-details-marker { display: none; }
+.review-form[open] summary { margin-bottom: 14px; }
+.review-form form { animation: slide-down .35s var(--ease); }
+
+.rating-input { display: inline-flex; flex-direction: row-reverse; gap: 4px; }
+.rating-input input { position: absolute; opacity: 0; pointer-events: none; }
+.rating-input label {
+  font-size: 34px; line-height: 1; color: #d3d8e6; cursor: pointer;
+  transition: color .15s, transform .15s var(--ease);
+}
+.rating-input label:hover, .rating-input label:hover ~ label,
+.rating-input input:checked ~ label { color: #f5a524; }
+.rating-input label:hover { transform: scale(1.18); }
+.rating-input input:checked + label { animation: bump .4s var(--ease); }
+.rating-input input:focus-visible + label { outline: 2px solid var(--primary); border-radius: 6px; }
+
+/* ---------- Форма заявки ---------- */
+
+.form-card { max-width: 620px; }
+
+.room-info {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px;
+  margin-top: 10px; padding: 12px 14px; border-radius: var(--radius-sm);
+  background: var(--primary-50);
+  animation: slide-down .3s var(--ease);
+}
+.room-info p { flex-basis: 100%; margin: 0; font-size: 14px; }
+.room-cap { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; }
+.room-cap .icon { width: 16px; height: 16px; }
+
+.pay-options { display: grid; gap: 10px; }
+.pay-option input { position: absolute; opacity: 0; pointer-events: none; }
+.pay-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  cursor: pointer; background: var(--surface);
+  transition: border-color .2s, background .2s, transform .15s var(--ease), box-shadow .2s;
+}
+.pay-card > .icon { color: var(--primary); width: 26px; height: 26px; }
+.pay-card b { display: block; font-size: 15px; }
+.pay-card small { display: block; color: var(--muted); font-size: 13px; }
+.pay-check {
+  margin-left: auto; display: grid; place-items: center; flex: none;
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid var(--border); color: #fff;
+  transition: background .2s, border-color .2s, transform .25s var(--ease);
+}
+.pay-check .icon { width: 14px; height: 14px; opacity: 0; transform: scale(.4); transition: .25s var(--ease); }
+.pay-card:hover { border-color: #c9d0e2; }
+.pay-option:active .pay-card { transform: scale(.98); }
+.pay-option input:checked + .pay-card {
+  border-color: var(--primary); background: var(--primary-50); box-shadow: 0 0 0 3px rgba(47, 91, 234, .12);
+}
+.pay-option input:checked + .pay-card .pay-check { background: var(--primary); border-color: var(--primary); }
+.pay-option input:checked + .pay-card .pay-check .icon { opacity: 1; transform: scale(1); }
+.pay-option input:focus-visible + .pay-card { outline: 3px solid rgba(47, 91, 234, .35); outline-offset: 2px; }
+.has-error .pay-card { border-color: #ffc2c4; }
+
+/* ---------- Админ-панель ---------- */
+
+.stats {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px;
+}
+.stat {
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 14px; border-radius: var(--radius);
+  background: var(--surface); border: 1.5px solid var(--border); color: var(--text);
+  transition: transform .2s var(--ease), border-color .2s, box-shadow .2s;
+  animation: card-in .45s var(--ease) both;
+}
+.stat:nth-child(2) { animation-delay: 60ms; }
+.stat:nth-child(3) { animation-delay: 120ms; }
+.stat:nth-child(4) { animation-delay: 180ms; }
+.stat:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--shadow); }
+.stat b { font-size: 26px; line-height: 1.1; }
+.stat span { font-size: 13px; color: var(--muted); font-weight: 600; line-height: 1.25; }
+.stat.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(47, 91, 234, .12); }
+.stat-new b { color: var(--primary); }
+.stat-scheduled b { color: var(--warning); }
+.stat-completed b { color: var(--success); }
+.stat b.tick { animation: bump .45s var(--ease); }
+
+.filters { display: grid; gap: 10px; margin-bottom: 12px; padding: 14px; }
+.filter-row { display: grid; gap: 10px; }
+.filter-actions { display: flex; gap: 10px; }
+.filter-actions .btn { flex: 1; }
+.results-count { margin: 4px 2px 12px; font-size: 14px; }
+
+.client { display: flex; align-items: center; gap: 12px; }
+.client b { display: block; }
+.client .muted { font-size: 13px; }
+.avatar {
+  display: grid; place-items: center; flex: none;
+  width: 42px; height: 42px; border-radius: 50%;
+  font-weight: 800; color: #fff; background: linear-gradient(135deg, var(--primary), var(--accent));
+}
+
+.status-form {
+  display: grid; grid-template-columns: 1fr auto; gap: 8px;
+  padding-top: 14px; border-top: 1px dashed var(--border);
+}
+.status-form .btn { padding: 0 14px; }
+
+.admin-card.is-updated { border-color: var(--success); animation: flash-ok 1.2s var(--ease); }
+
+/* ---------- Пустое состояние ---------- */
+
+.empty { text-align: center; padding: 36px 20px; animation: card-in .5s var(--ease) both; }
+.empty h1 { font-size: 48px; }
+.empty h3 { margin: 12px 0 4px; }
+.empty p { margin: 0 0 18px; }
+.empty-icon {
+  display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 20px;
+  color: var(--primary); background: var(--primary-50);
+  animation: float 3s ease-in-out infinite;
+}
+.empty-icon .icon { width: 30px; height: 30px; }
+
+/* ---------- Уведомления (toast) ---------- */
+
+.toast-stack {
+  position: fixed; left: 16px; right: 16px; top: 72px; z-index: 50;
+  display: grid; gap: 8px; justify-items: center; pointer-events: none;
+}
+.toast {
+  pointer-events: auto; max-width: 420px; width: 100%;
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600; color: #fff;
+  box-shadow: 0 10px 30px rgba(18, 26, 51, .2);
+  animation: toast-in .45s var(--ease) both;
+}
+.toast-success { background: var(--success); }
+.toast-error { background: var(--danger); }
+.toast-info { background: var(--primary); }
+.toast.out { animation: toast-out .35s var(--ease) forwards; }
+
+@media (max-width: 420px) {
+  /* на узком экране кнопка «Сохранить» — только иконка, селекту статуса больше места */
+  .status-form .btn { width: 50px; padding: 0; }
+  .status-form .btn span { display: none; }
+}
+
+/* ---------- Анимации ---------- */
+
+@keyframes page-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes card-in { from { opacity: 0; transform: translateY(14px) scale(.98); } }
+@keyframes slide-down { from { opacity: 0; transform: translateY(-6px); } }
+@keyframes pop { from { opacity: 0; transform: scale(.96); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+@keyframes shake {
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+@keyframes bump { 40% { transform: scale(1.18); } }
+@keyframes pulse { 50% { opacity: .35; } }
+@keyframes float { 50% { transform: translateY(-5px); } }
+@keyframes seat { from { opacity: 0; transform: translateY(10px); } }
+@keyframes toast-in { from { opacity: 0; transform: translateY(-16px) scale(.96); } }
+@keyframes toast-out { to { opacity: 0; transform: translateY(-16px) scale(.96); } }
+@keyframes flash-ok { 0% { box-shadow: 0 0 0 0 rgba(24, 160, 88, .45); } 100% { box-shadow: 0 0 0 14px rgba(24, 160, 88, 0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* ---------- Планшет и десктоп ---------- */
+
+@media (min-width: 640px) {
+  .stats { grid-template-columns: repeat(4, 1fr); }
+  .filter-row { grid-template-columns: repeat(3, 1fr); }
+  .pay-options { grid-template-columns: 1fr 1fr; }
+  .filters { grid-template-columns: 1fr auto; align-items: start; }
+  .filters .filter-row { grid-column: 1 / -1; grid-row: 2; }
+  .filter-actions .btn { flex: none; }
+}
+
+@media (min-width: 900px) {
+  body.has-nav { padding-bottom: 0; }
+  h1 { font-size: 32px; }
+  .topbar {
+    height: 68px; padding: 0 max(24px, calc((100vw - 1120px) / 2 + 16px));
+    background: rgba(255, 255, 255, .85);
+    backdrop-filter: saturate(180%) blur(12px);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+  }
+  .brand { margin-right: auto; }
+
+  .nav {
+    position: static; height: auto; padding: 0; gap: 4px;
+    background: none; border: 0; box-shadow: none;
+  }
+  .nav-link { flex-direction: row; gap: 8px; padding: 9px 14px; font-size: 14px; white-space: nowrap; }
+  .nav-link .icon { width: 18px; height: 18px; }
+
+  .topbar-user { padding-left: 14px; margin-left: 4px; border-left: 1px solid var(--border); }
+  .topbar-user span { max-width: 220px; }
+
+  .page { padding: 32px 24px 48px; }
+  .btn-head { display: inline-flex; }
+  .cards { grid-template-columns: repeat(2, 1fr); align-items: start; }
+  .cards-grid { grid-template-columns: repeat(3, 1fr); }
+  .auth-page .page { padding-top: 48px; }
+  .auth { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 920px; align-items: center; }
+  .auth-hero { text-align: left; }
+  .auth-hero h1 { font-size: 40px; }
+  .auth-illustration { max-width: 380px; }
+  .auth-card { padding: 28px; }
+  .toast-stack { left: auto; right: 24px; top: 84px; justify-items: end; }
+}
+</style>
+</head>
+<body class="auth-page">
+  <header class="topbar">
+    <a href="login.html" class="brand">
+<svg class="logo-mark" viewBox="0 0 40 40" aria-hidden="true">
+  <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#2F5BEA"/><stop offset="1" stop-color="#7B4DFF"/></linearGradient></defs>
+  <rect width="40" height="40" rx="11" fill="url(#lg)"/>
+  <path d="M10 27V15.5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2V27" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M8 27h24" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+  <circle cx="20" cy="20" r="3.2" fill="#FFD166"/>
+</svg><span>Конференции<b>.РФ</b></span></a>
+    
+    
+  </header>
+  <main class="page">
+    
+  <div class="auth">
+    
+  <section class="auth-hero">
+    <svg class="auth-illustration" viewBox="0 0 320 150" aria-hidden="true">
+      <rect x="40" y="18" width="240" height="92" rx="10" class="ill-screen"/>
+      <rect x="62" y="38" width="96" height="8" rx="4" class="ill-line"/>
+      <rect x="62" y="54" width="140" height="6" rx="3" class="ill-line soft"/>
+      <rect x="62" y="66" width="120" height="6" rx="3" class="ill-line soft"/>
+      <path d="M214 92 L232 66 L246 80 L258 58 L270 92 Z" class="ill-chart"/>
+      <g class="ill-seats">
+        <rect x="36" y="122" width="20" height="18" rx="6" style="animation-delay:0ms"/><rect x="64" y="122" width="20" height="18" rx="6" style="animation-delay:60ms"/><rect x="92" y="122" width="20" height="18" rx="6" style="animation-delay:120ms"/><rect x="120" y="122" width="20" height="18" rx="6" style="animation-delay:180ms"/><rect x="148" y="122" width="20" height="18" rx="6" style="animation-delay:240ms"/><rect x="176" y="122" width="20" height="18" rx="6" style="animation-delay:300ms"/><rect x="204" y="122" width="20" height="18" rx="6" style="animation-delay:360ms"/><rect x="232" y="122" width="20" height="18" rx="6" style="animation-delay:420ms"/><rect x="260" y="122" width="20" height="18" rx="6" style="animation-delay:480ms"/>
+      </g>
+    </svg>
+    <h1>Регистрация</h1>
+    <p>Создайте аккаунт, чтобы оставлять заявки</p>
+  </section>
+    <form class="card auth-card" method="post" action="/register" novalidate data-validate>
+      
+      
+  <div class="field has-error">
+    <label for="f-login">Логин</label>
+    <div class="input-wrap">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 16 0v1"/></svg>
+      <input id="f-login" name="login" type="text" value="ivan" placeholder="Например, ivanov2027" autocomplete="username" aria-invalid="true" aria-describedby="f-login-err" required pattern="[A-Za-z0-9]{6,}" data-msg-pattern="Только латиница и цифры, не менее 6 символов">
+      
+    </div>
+    <p class="field-hint">Латиница и цифры, не менее 6 символов</p>
+    <p class="field-error" id="f-login-err" data-error-for="login">Только латиница и цифры, не менее 6 символов</p>
+  </div>
+      
+  <div class="field has-error">
+    <label for="f-password">Пароль</label>
+    <div class="input-wrap">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <input id="f-password" name="password" type="password" placeholder="Минимум 8 символов" autocomplete="new-password" aria-invalid="true" aria-describedby="f-password-err" required minlength="8" data-msg-minlength="Пароль должен содержать минимум 8 символов">
+      <button type="button" class="toggle-pass" aria-label="Показать пароль" data-toggle-pass><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    </div>
+    
+    <p class="field-error" id="f-password-err" data-error-for="password">Пароль должен содержать минимум 8 символов</p>
+  </div>
+      
+  <div class="field has-error">
+    <label for="f-fullName">ФИО</label>
+    <div class="input-wrap">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.6-1.5 1.7-2 3-2s2.4.5 3 2M15 10h3M15 14h3"/></svg>
+      <input id="f-fullName" name="fullName" type="text" value="Ivanov" placeholder="Иванов Иван Иванович" autocomplete="name" aria-invalid="true" aria-describedby="f-fullName-err" required pattern="[А-Яа-яЁё\s]+" data-msg-pattern="Только символы кириллицы и пробелы">
+      
+    </div>
+    
+    <p class="field-error" id="f-fullName-err" data-error-for="fullName">Только символы кириллицы и пробелы</p>
+  </div>
+      
+  <div class="field has-error">
+    <label for="f-phone">Телефон</label>
+    <div class="input-wrap">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>
+      <input id="f-phone" name="phone" type="tel" value="8(914)12" placeholder="8(XXX)XXX-XX-XX" autocomplete="tel" aria-invalid="true" aria-describedby="f-phone-err" required inputmode="numeric" data-mask="phone" pattern="8\(\d{3}\)\d{3}-\d{2}-\d{2}" data-msg-pattern="Формат: 8(XXX)XXX-XX-XX">
+      
+    </div>
+    
+    <p class="field-error" id="f-phone-err" data-error-for="phone">Формат: 8(XXX)XXX-XX-XX</p>
+  </div>
+      
+  <div class="field has-error">
+    <label for="f-email">Электронная почта</label>
+    <div class="input-wrap">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>
+      <input id="f-email" name="email" type="email" value="ivanov@" placeholder="name@mail.ru" autocomplete="email" aria-invalid="true" aria-describedby="f-email-err" required data-msg-type="Некорректный адрес электронной почты">
+      
+    </div>
+    
+    <p class="field-error" id="f-email-err" data-error-for="email">Некорректный адрес электронной почты</p>
+  </div>
+      <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+      <p class="auth-switch">Уже зарегистрированы? <a href="login.html">Войти</a></p>
+    </form>
+  </div>
+  </main>
+  <div class="toast-stack" data-toast-stack></div>
+  <script>// Конференции.РФ — клиентская интерактивность (без библиотек, работает офлайн)
+(function () {
+  'use strict';
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+  /* ---------------- Уведомления ---------------- */
+
+  function dismiss(toast, delay) {
+    setTimeout(() => {
+      toast.classList.add('out');
+      toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    }, delay);
+  }
+
+  function showToast(text, type = 'success') {
+    const stack = $('[data-toast-stack]');
+    if (!stack) return;
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.setAttribute('role', 'status');
+    toast.textContent = text;
+    stack.appendChild(toast);
+    dismiss(toast, 3200);
+  }
+
+  $$('[data-toast]').forEach((t) => dismiss(t, 3600));
+
+  /* ---------------- «Рябь» на кнопках ---------------- */
+
+  document.addEventListener('pointerdown', (e) => {
+    const btn = e.target.closest('.btn');
+    if (!btn) return;
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+    ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+    btn.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+  });
+
+  /* ---------------- Показать / скрыть пароль ---------------- */
+
+  $$('[data-toggle-pass]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const input = btn.parentElement.querySelector('input');
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.classList.toggle('on', show);
+      btn.setAttribute('aria-label', show ? 'Скрыть пароль' : 'Показать пароль');
+    });
+  });
+
+  /* ---------------- Маска телефона 8(XXX)XXX-XX-XX ---------------- */
+
+  function formatPhone(value) {
+    let d = value.replace(/\D/g, '');
+    if (!d) return '';
+    if (d[0] === '7') d = '8' + d.slice(1);
+    if (d[0] !== '8') d = '8' + d;
+    d = d.slice(0, 11);
+    let out = '8';
+    if (d.length > 1) out += '(' + d.slice(1, 4);
+    if (d.length >= 4) out += ')';
+    if (d.length > 4) out += d.slice(4, 7);
+    if (d.length > 7) out += '-' + d.slice(7, 9);
+    if (d.length > 9) out += '-' + d.slice(9, 11);
+    return out;
+  }
+
+  $$('[data-mask="phone"]').forEach((input) => {
+    let prev = input.value;
+    input.addEventListener('input', () => {
+      let digits = input.value.replace(/\D/g, '');
+      // поле было пустым («8(»), а пользователь начал номер с 7/8 — это код страны, не дублируем
+      if (prev.replace(/\D/g, '').length <= 1 && /^8[78]/.test(digits)) digits = '8' + digits.slice(2);
+      input.value = formatPhone(digits);
+      prev = input.value;
+    });
+    input.addEventListener('focus', () => {
+      if (!input.value) input.value = '8(';
+    });
+    input.addEventListener('blur', () => {
+      if (input.value === '8(' || input.value === '8') input.value = '';
+    });
+  });
+
+  /* ---------------- Валидация форм ---------------- */
+
+  const DEFAULT_MSG = {
+    required: 'Поле обязательно для заполнения',
+    pattern: 'Неверный формат',
+    minlength: (n) => `Минимум ${n} символов`,
+    type: 'Неверный формат',
+    min: 'Значение слишком маленькое',
+  };
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  /** Возвращает текст ошибки или '' для группы полей с одним name */
+  function validateGroup(form, name) {
+    const inputs = $$(`[name="${CSS.escape(name)}"]`, form);
+    const first = inputs[0];
+    const msg = (key, fallback) => first.dataset[`msg${key[0].toUpperCase()}${key.slice(1)}`] || fallback;
+
+    if (first.type === 'radio') {
+      const required = inputs.some((i) => i.required);
+      return required && !inputs.some((i) => i.checked) ? msg('required', DEFAULT_MSG.required) : '';
+    }
+
+    const value = first.value.trim();
+    if (!value) return first.required ? msg('required', DEFAULT_MSG.required) : '';
+
+    const pattern = first.getAttribute('pattern');
+    if (pattern && !new RegExp(`^(?:${pattern})$`).test(value)) return msg('pattern', DEFAULT_MSG.pattern);
+
+    const minlength = Number(first.getAttribute('minlength'));
+    if (minlength && first.value.length < minlength) return msg('minlength', DEFAULT_MSG.minlength(minlength));
+
+    if (first.type === 'email' && !EMAIL_RE.test(value)) return msg('type', DEFAULT_MSG.type);
+
+    const min = first.getAttribute('min');
+    if (first.type === 'date' && min && value < min) return msg('min', DEFAULT_MSG.min);
+
+    return '';
+  }
+
+  function showError(form, name, message) {
+    const input = $(`[name="${CSS.escape(name)}"]`, form);
+    const field = input && input.closest('.field');
+    const box = $(`[data-error-for="${CSS.escape(name)}"]`, form);
+    if (!field) return;
+    if (message) box && (box.textContent = message);
+    field.classList.toggle('has-error', !!message);
+    field.classList.toggle('is-valid', !message && input.type !== 'radio' && !!input.value);
+    $$(`[name="${CSS.escape(name)}"]`, form).forEach((i) => i.setAttribute('aria-invalid', message ? 'true' : 'false'));
+  }
+
+  function shake(el) {
+    el.classList.remove('shake');
+    void el.offsetWidth; // перезапуск анимации
+    el.classList.add('shake');
+  }
+
+  $$('form[data-validate]').forEach((form) => {
+    const names = [...new Set($$('input[name], select[name], textarea[name]', form).map((el) => el.name))];
+
+    form.addEventListener('focusout', (e) => {
+      const el = e.target;
+      if (!el.name || el.type === 'radio' || !el.value) return;
+      showError(form, el.name, validateGroup(form, el.name));
+    });
+
+    form.addEventListener('input', (e) => {
+      const el = e.target;
+      if (!el.name) return;
+      const field = el.closest('.field');
+      // пока ошибка показана — перепроверяем на лету, чтобы она исчезла сразу после исправления
+      if (field && field.classList.contains('has-error')) showError(form, el.name, validateGroup(form, el.name));
+    });
+
+    form.addEventListener('change', (e) => {
+      if (e.target.type === 'radio' || e.target.tagName === 'SELECT') showError(form, e.target.name, validateGroup(form, e.target.name));
+    });
+
+    form.addEventListener('submit', (e) => {
+      let firstInvalid = null;
+      for (const name of names) {
+        const message = validateGroup(form, name);
+        showError(form, name, message);
+        if (message && !firstInvalid) firstInvalid = $(`[name="${CSS.escape(name)}"]`, form);
+      }
+      if (firstInvalid) {
+        e.preventDefault();
+        const field = firstInvalid.closest('.field');
+        shake(field);
+        if (firstInvalid.type !== 'radio') firstInvalid.focus({ preventScroll: true });
+        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      const btn = $('button[type="submit"]', form);
+      if (btn) btn.classList.add('is-loading');
+    });
+  });
+
+  // ошибки, пришедшие с сервера, — тоже «встряхиваем»
+  const serverError = $('.field.has-error');
+  if (serverError) shake(serverError);
+
+  /* ---------------- Информация о помещении ---------------- */
+
+  const roomSelect = $('[data-room-select]');
+  if (roomSelect) {
+    const info = $('[data-room-info]');
+    const update = () => {
+      const opt = roomSelect.selectedOptions[0];
+      if (!opt || !opt.value) {
+        info.hidden = true;
+        return;
+      }
+      $('[data-room-type]', info).textContent = opt.dataset.type;
+      $('[data-room-capacity]', info).textContent = `до ${opt.dataset.capacity} человек`;
+      $('[data-room-description]', info).textContent = opt.dataset.description;
+      info.hidden = false;
+      info.style.animation = 'none';
+      void info.offsetWidth;
+      info.style.animation = '';
+    };
+    roomSelect.addEventListener('change', update);
+    update();
+  }
+
+  /* ---------------- Панель администратора ---------------- */
+
+  const filters = $('[data-filters]');
+  if (filters) {
+    $$('select', filters).forEach((s) => s.addEventListener('change', () => filters.requestSubmit()));
+  }
+
+  function updateCounts(counts) {
+    let total = 0;
+    Object.entries(counts).forEach(([code, n]) => {
+      total += n;
+      const el = $(`[data-count="${code}"]`);
+      if (el && el.textContent !== String(n)) {
+        el.textContent = n;
+        el.classList.remove('tick');
+        void el.offsetWidth;
+        el.classList.add('tick');
+      }
+    });
+    const all = $('[data-count="all"]');
+    if (all) all.textContent = total;
+  }
+
+  $$('[data-status-form]').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = $('button', form);
+      const card = form.closest('[data-app-card]');
+      const status = form.elements.status.value;
+      btn.classList.add('is-loading');
+
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+          body: new URLSearchParams({ status }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Ошибка сохранения');
+
+        const badge = $('[data-status-badge]', card);
+        badge.className = `badge status-${data.status} bump`;
+        badge.textContent = data.label;
+        card.dataset.status = data.status;
+        card.classList.remove('is-updated');
+        void card.offsetWidth;
+        card.classList.add('is-updated');
+        updateCounts(data.counts);
+        showToast(`Статус изменён: «${data.label}»`);
+      } catch (err) {
+        showToast(err.message || 'Не удалось сохранить', 'error');
+      } finally {
+        btn.classList.remove('is-loading');
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
